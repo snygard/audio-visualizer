@@ -1,0 +1,32 @@
+section {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+    
+    &::after {
+        content: '';
+        position: absolute;
+        display: block;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 30vh;
+        background-image: linear-gradient(rgba(#fff, 0) 0%, #fff 100%);
+    }
+}
+
+div {
+    position: relative;
+    width: 20px;
+    transform-origin: bottom;
+    margin: 0 5px;
+    
+    @for $i from 1 through 10 {
+        &:nth-child(#{$i}) {
+            background-color: hsl($i*10-10, 80%, 58%);
+        }
+    }
+}

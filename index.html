@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <section><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></section>
+        
+        <script>
+        const audioAPI = new AudioContext();
+        const allEls = document.querySelectorAll('div');
+        
+        var analyserNode,
+            frequencyData = new Uint8Array(128);
+        
+        fetch('yourmp3.mp3')
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => audioAPI.decodeAudioData(arrayBuffer))
+            .then(audioBuffer => {
+                const source = audioAPI.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioAPI.destination);
+                source.start();
+                
+                analyserNode = audioAPI.createAnalyser();
+                analyserNode.fftSize = 256;
+                source.connect(analyserNode);
+                
+                animate();
+            });
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            analyserNode.getByteFrequencyData(frequencyData);
+            
+            for (let i=0; i<allEls.length; i++) {
+                allEls[i].style.height = Math.floor(Math.pow(frequencyData[i*2]/4,2)/10)+'px';
+            }
+        }
+        </script>
+    </body>
+</html>
